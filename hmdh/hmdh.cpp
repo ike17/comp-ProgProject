@@ -4,6 +4,8 @@
 #include <string>
 #include <regex>
 
+using namespace std
+
 // Struct to hold metadata extracted from filename
 struct FileInfo {
     int experimentNumber;
