@@ -152,10 +152,30 @@ else
     echo "Fail"
 fi
 
+#check map functionality
+echo -n "Testing map functionality - "
+echo "M" | ./maze $fileName > tmp
+if grep -q "Map: " tmp;
+then
+    echo "Pass"
+else
+    echo "Fail"
+fi
+
 #check for out of bound conditions
 echo -n "Testing for out of bounds - "
 ./maze $fileName > tmp
 if grep -q "Out Of Bounds" tmp;
+then
+    echo "Pass"
+else
+    echo "Fail"
+fi
+
+#check if player quit
+echo -n "Testing when player quits game - "
+echo "Q"| ./maze $fileName > tmp
+if grep -q "You have quit the game" tmp;
 then
     echo "Pass"
 else
