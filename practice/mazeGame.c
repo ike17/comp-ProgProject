@@ -1,12 +1,28 @@
+#include "maze.h"
+#include "mazeFx.h"
 
-// load maze
 
-// start
 
-//take input
+int main()
+{
+    //load the maze file
 
-// obstacle detection
+    //validation check
+        //allocate memory
 
-//map preview with current location
+    //intialize user cordinates to the start cordinates
 
-//game over when user readches E
+    //while game not over ask for user input
+
+    //if movement character is entered call playerMovement funtion
+        //if the following situations arises display error and promt to reenter
+            //user comes into contact with a wall
+            //user goes outside the bounds of the maze
+        //if user reaches E game over and break out of the loop
+
+    //if input is 'M/m' call displayMaze funtion
+    
+    //if invalid character is entered display error
+
+    //display you win message
+}
