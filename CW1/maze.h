@@ -11,7 +11,7 @@
 
 //struct to contain the dimensions of the maze and player cordinates
 typedef struct{
-    char **mazeLayout
+    char **mazeLayout;
     int mazeWidth, mazeHeight;
     int playerX, playerY;
 } Maze;
