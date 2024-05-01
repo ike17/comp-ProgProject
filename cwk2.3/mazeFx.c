@@ -131,6 +131,8 @@ bool dfs(Maze *maze, int x, int y, bool **visited);
 bool playerMovement(Maze *maze, char move) {
     Position newPos = maze->playerPos;
 
+    // scanf for movement case insensitive
+    
     switch (move) {
         case 'w':
             newPos.y--;
