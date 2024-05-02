@@ -10,16 +10,6 @@ bool loadMaze(const char *filename, Maze *maze) {
         return false;
     }
 
-    if (!mazeDimensions(mazeFile, maze)) {
-        fclose(mazeFile);
-        return false;
-    }
-
-    if (!mazeData(mazeFile, maze)) {
-        fclose(mazeFile);
-        return false;
-    }
-
     fclose(mazeFile);
     return true;
 }
@@ -148,19 +138,27 @@ bool playerMovement(Maze *maze, char move) {
     switch (move) {
         case 'W':
         case 'w':
-            newPos.y--;
+            if (playerMovementChecker){
+                newPos.y--;
+            }
             break;
         case 'A':
         case 'a':
-            newPos.x--;
+            if (playerMovementChecker){
+                newPos.x--;
+            }
             break;
         case 'S':
         case 's':
-            newPos.y++;
+            if (playerMovementChecker){
+                newPos.y++;
+            }
             break;
         case 'D':
         case 'd':
-            newPos.x++;
+            if (playerMovementChecker){
+                newPos.x++;
+            }
             break;
         case 'M':
         case 'm':
@@ -170,19 +168,25 @@ bool playerMovement(Maze *maze, char move) {
             return false;
     }
 
-    if (newPos.x < 0 || newPos.x >= maze->width || newPos.y < 0 || newPos.y >= maze->height ||
-        maze->mazeLayout[newPos.y][newPos.x] == WALL_CHAR) {
-        return false;
-    }
 
     maze->playerPos = newPos;
     return true;
 }
 
+bool playerMovementChecker(Maze *maze){
+    if (newPos.x < 0 || newPos.x >= maze->width || newPos.y < 0 || newPos.y >= maze->height) {
+        printf("Out of Bounds\n");
+        return false;
+    }
+
+    if (maze->mazeLayout[newPos.y][newPos.x] == WALL_CHAR){
+        printf("you have hit a wall\n")
+        return false;
+    }
+}
 
 
-
-void displayMaze(Maze *maze)(
+void displayMaze(Maze *maze){
     printf("\n");
     for (int i = 0; i < maze->height; i++) {
         for (int j = 0; j < maze->width; j++) {
@@ -195,9 +199,7 @@ void displayMaze(Maze *maze)(
         }
         printf("\n");
     }
-)
-
-
+}
 
 
 void freeMaze(Maze *maze) {

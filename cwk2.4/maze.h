@@ -25,7 +25,7 @@ typedef struct {
     Position startPos;
     Position endPos;
     Position playerPos;
-    bool gameOver;
+    bool playerWin;
 } Maze;
 
 #endif
