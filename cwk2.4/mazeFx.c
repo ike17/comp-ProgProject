@@ -2,89 +2,74 @@
 
 
 
+
 bool loadMaze(const char *filename, Maze *maze) {
-    File *file; 
-    file = fopen(filename, "r");
+    FILE *mazeFile; 
+    mazeFile = fopen(filename, "r");
     if (mazeFile == NULL){
-        return 1;
-    }else{
-        return 0;
+        return false;
     }
 
-    if (!mazeDimensions(file ,maze))(
-        fclose(file);
-        return 1;
-    )
+    if (!mazeDimensions(mazeFile, maze)) {
+        fclose(mazeFile);
+        return false;
+    }
 
-    if (!mazeData(file ,maze))(
-        fclose(file);
-        return 1;
-    )
+    if (!mazeData(mazeFile, maze)) {
+        fclose(mazeFile);
+        return false;
+    }
 
-    fclose(file);
-    return 0;
+    fclose(mazeFile);
+    return true;
 }
 
 
 bool mazeDimensions(FILE *file, Maze *maze) {
-    int lineCount = 1;
-    char c;
     char line[1024];
-    linecontent[1024];
+    int lineCount = 0;
+    size_t width = 0;
 
-    do(
-        c = fgetc(file);
-        if (c== '\n') lineCount++;
-    )while (c!=EOF);
+    while (fgets(line, sizeof(line), file) != NULL) {
+        // Remove newline character if present
+        size_t currentLength = strlen(line);
+        if (line[currentLength-1] == '\n') {
+            line[currentLength-1] = '\0';
+            currentLength--;
+        }
 
-    // if last line is an empty trailing new line omit and decrement lineCount
-    
-    if (fgets(line, 1024, file) != NULL) {
-        strcpy(lineContent ,line);
-    } else {
-        return 1;
+        // Check if line is empty after removing newline, ignore it if so
+        if (currentLength == 0 && feof(file)) {
+            continue;
+        }
+
+        // Set width from the first non-empty line
+        if (lineCount == 0) {
+            width = currentLength;
+        } else {
+            // Check subsequent lines for consistent width
+            if (currentLength != width) {
+                return false;
+            }
+        }
+        lineCount++;
     }
-    
-    maze->width = sizeof(lineContent);
+
+    // Set the maze dimensions
+    maze->width = width;
     maze->height = lineCount;
-    // maze.width = sizeof(lineContent)
-    // maze.height = lineCount
-
-   
-}
-
-bool mazeWidth(FILE *file, Maze *maze){
-    int line = 0;
-
-    while(!feof(file) && ferror(file)){
-        if {fegts(data[line] , 1024, file) != NULL)
-        line++;
-        }
-    }
-
-    for (x=1; x<line; x++){
-        if  (izeof(line) != sizeof(line[0])){
-            return false;
-        }else{
-            return true;
-        }
-
-    }
-    // for loop starting from lineCount 2
-        // compare sizeof each line to maze.width
-            // if != then return 1
-
+    rewind(file);  // Rewind file for subsequent reading in mazeData
+    return true;
 }
 
 
 bool mazeData(FILE *file, Maze *maze) {
-
     maze->mazeLayout = (char **)malloc(maze->height * sizeof(char *));
     if (maze->mazeLayout == NULL) {
         return false;
     }
 
-    char lineBuffer[MAX_MAZE_LENGTH + 2]; // +2 for possible newline and null terminator
+    char lineBuffer[MAX_MAZE_LENGTH + 2];
     for (int i = 0; i < maze->height; i++) {
         if (fgets(lineBuffer, sizeof(lineBuffer), file) == NULL || lineBuffer[0] == '\n') {
             while (i-- > 0) free(maze->mazeLayout[i]);
@@ -104,16 +89,12 @@ bool mazeData(FILE *file, Maze *maze) {
         }
     }
     return true;
-    }
-    // for loop to go through each line of code
-    // malloc based on the size of line content in each line
 }
 
 
 bool validateMaze(Maze *maze) {
     if (maze->width < MIN_MAZE_LENGTH || maze->width > MAX_MAZE_LENGTH ||
         maze->height < MIN_MAZE_LENGTH || maze->height > MAX_MAZE_LENGTH) {
-        fprintf(stderr, "Maze dimensions are out of acceptable range (%d to %d).\n", MIN_MAZE_LENGTH, MAX_MAZE_LENGTH);
         return false;
     }
 
